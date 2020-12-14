@@ -1,8 +1,8 @@
 {
-  "name": "nest-typescript-starter",
+  "name": "ethereum-token-tracker",
   "version": "1.0.0",
-  "description": "Nest TypeScript starter repository",
-  "license": "MIT",
+  "description": "Application used to track tokens appearing in pairs with WETH.",
+  "author": "Mauro Benec",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
