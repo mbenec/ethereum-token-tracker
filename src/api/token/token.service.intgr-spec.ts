@@ -122,7 +122,7 @@ describe('TokenService', () => {
         });
 
         it('should populate the database with new tokens', async () => {
-            await tokenService.insertNewTokens();
+            await tokenService.checkForNewTokens();
             const count = await entityManager
                 .createQueryBuilder()
                 .select('token')

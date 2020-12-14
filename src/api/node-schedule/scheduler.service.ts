@@ -14,7 +14,7 @@ export class ScheduleService {
         scheduleJob(rule, async () => {
             // eslint-disable-next-line no-console
             console.log('Checking for new tokens.');
-            await this.tokenService.insertNewTokens();
+            await this.tokenService.checkForNewTokens();
         });
     }
 }

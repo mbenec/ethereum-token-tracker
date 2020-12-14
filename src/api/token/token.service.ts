@@ -51,10 +51,10 @@ export class TokenService {
         return this.getTokenList(pairList);
     }
 
-    public async insertNewTokens(): Promise<number> {
+    public async checkForNewTokens(): Promise<number> {
         const latestToken = await this.tokenRepository.findLatestToken();
         const tokenZeroData = this.getQueryData(true,0,50, QueryOrderEnum.DESC);
-        const tokenOneData = this.getQueryData(false,0,50,QueryOrderEnum.DESC);
+        const tokenOneData = this.getQueryData(false,0,50, QueryOrderEnum.DESC);
 
         const newTokens = (await this.fetchTokens(this.API_URL, tokenZeroData, true))
             .concat(await this.fetchTokens(this.API_URL, tokenOneData, false));
