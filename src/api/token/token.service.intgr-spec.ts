@@ -8,12 +8,14 @@ import { INestApplication, Logger } from '@nestjs/common';
 import { ClassValidatorService } from '../validators/class-validator.service';
 import { TokenRepository } from './token.repository';
 import { TokenController } from './token.controller';
+import { Token } from './entities/token.entity';
 
 describe('TokenService', () => {
     let app: INestApplication;
     let tokenRepository: TokenRepository;
     let tokenService: TokenService;
     let queryRunner: QueryRunner;
+    let entityManager: EntityManager;
     const API_URL = 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2';
 
     beforeAll(async () => {
@@ -41,18 +43,19 @@ describe('TokenService', () => {
         queryRunner = manager.queryRunner = dbConnection.createQueryRunner('master');
         tokenService = app.get(TokenService);
         tokenRepository = app.get(TokenRepository);
+        entityManager = app.get(EntityManager);
 
         const token = await tokenRepository.createToken({
             name: 'foo',
             symbol: 'foo',
             id: 'foo',
-            timestamp: new Date().getTime(),
+            timestamp: new Date(1576357912).getTime(),
         });
         const token2 = await tokenRepository.createToken({
             name: 'foo',
             symbol: 'foo',
             id: 'foo2',
-            timestamp: new Date().getTime(),
+            timestamp: new Date(1576357912).getTime(),
         });
         await tokenRepository.insertTokens([token, token2]);
     });
@@ -109,6 +112,22 @@ describe('TokenService', () => {
             const query = await tokenService.getQueryData(false, 0, 25);
             const data = await tokenService.fetchTokens(API_URL, query, false);
             expect(data.length).toBe(25);
+        });
+
+        it('should return empty list if there are no tokens', async () => {
+            const query = await tokenService.getQueryData(false, 50000, 25);
+            const data = await tokenService.fetchTokens(API_URL, query, false);
+            expect(data.length).toBe(0);
+        });
+
+        it('should populate the database with new tokens', async () => {
+            await tokenService.insertNewTokens();
+            const count = await entityManager
+                .createQueryBuilder()
+                .select('token')
+                .from(Token, 'token')
+                .getCount()
+            expect(count).toBeGreaterThan(100);
         });
     });
 });
