@@ -8,12 +8,12 @@ export class ScheduleService {
         this.insertNewTokens();
     }
 
-    insertNewTokens() {
+    insertNewTokens(): void {
         const rule = new RecurrenceRule();
         rule.second = [0];
         scheduleJob(rule, async () => {
             // eslint-disable-next-line no-console
-            console.log('Fetching new tokens.');
+            console.log('Checking for new tokens.');
             await this.tokenService.insertNewTokens();
         });
     }

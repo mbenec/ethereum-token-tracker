@@ -39,6 +39,7 @@ describe('TokenService', () => {
         await app.init();
         const dbConnection = moduleFixture.get(Connection);
         const manager = moduleFixture.get(EntityManager);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         queryRunner = manager.queryRunner = dbConnection.createQueryRunner('master');
         tokenService = app.get(TokenService);
