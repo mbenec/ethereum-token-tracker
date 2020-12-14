@@ -13,8 +13,8 @@ export class AxiosService {
     ) {
     }
 
-    async axiosPost(url: string, data: string): Promise<any> {
-        this.logger.log('Axios post on ' + url);
+    public async axiosPost(url: string, data: string): Promise<any> {
+        this.logger.log('Axios post request on ' + url + " with data " + data);
         return axios
             .post(url, data)
             .then(function(response) {
