@@ -21,14 +21,14 @@ export class TokenRepository extends Repository<Token> {
         return token;
     }
 
-    public async findLatestToken(): Promise<Token> {
+    public async findLatestToken(): Promise<Token | undefined> {
         return this.entityManager
             .createQueryBuilder()
             .select('token')
             .from(Token, 'token')
             .limit(1)
             .orderBy('token.timestamp', 'DESC')
-            .getOneOrFail();
+            .getOne();
     }
 
     public async insertTokens(tokens: Token[]): Promise<Token[]> {

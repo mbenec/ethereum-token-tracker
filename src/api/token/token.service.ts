@@ -60,7 +60,8 @@ export class TokenService {
         const newTokens = (await this.fetchTokens(this.API_URL, tokenZeroData, true))
             .concat(await this.fetchTokens(this.API_URL, tokenOneData, false));
 
-        const filteredTokens = newTokens.filter(token => new Date(token.timestamp) > latestToken.timestamp);
+        const latestTokenTimestamp = latestToken?.timestamp ?? 0;
+        const filteredTokens = newTokens.filter(token => new Date(token.timestamp) > latestTokenTimestamp);
         if(filteredTokens.length > 0){
             await this.tokenRepository.insertTokens(filteredTokens);
         }

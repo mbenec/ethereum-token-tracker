@@ -7,18 +7,22 @@ import { TokenPayload } from '../token/types/payload/token.payload';
 export class ClassValidatorService {
 
     public validatePairsFetchData(data: PairListOnePayload | PairListTwoPayload): boolean {
-        if (data instanceof PairListOnePayload) {
-            if (data && data.pairs && !data.pairs.every((pair) =>
+        if(data && data.pairs){
+            if (data instanceof PairListOnePayload) {
+                if (!data.pairs.every((pair) =>
                     this.validatePairs(pair.token1, pair.createdAtTimestamp))) {
-                throw new BadRequestException("Invalid fetch data.");
-            }
-        } else {
-            if (data && data.pairs && !data.pairs.every((pair) =>
+                    throw new BadRequestException("Invalid fetch data.");
+                }
+            } else {
+                if (!data.pairs.every((pair) =>
                     this.validatePairs(pair.token0, pair.createdAtTimestamp))) {
-                throw new BadRequestException("Invalid fetch data.");
+                    throw new BadRequestException("Invalid fetch data.");
+                }
             }
+            return true;
+        } else {
+            throw new BadRequestException("Invalid fetch data.");
         }
-        return true;
     }
 
     private validatePairs(token: TokenPayload, timestamp: string): boolean {
