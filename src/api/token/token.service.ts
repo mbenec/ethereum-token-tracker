@@ -21,14 +21,17 @@ export class TokenService {
     ) {}
 
     public async getTokenById(id: string): Promise<Token> {
+        this.logger.log("Getting token with id " + id);
         return this.tokenRepository.findById(id);
     }
 
     public async getTokensByName(name: string): Promise<Token[]> {
+        this.logger.log("Getting token with name " + name);
         return this.tokenRepository.findByName(name);
     }
 
     public async getTokensBySymbol(symbol: string): Promise<Token[]> {
+        this.logger.log("Getting token with symbol " + symbol);
         return this.tokenRepository.findBySymbol(symbol);
     }
 
@@ -42,30 +45,16 @@ export class TokenService {
             return [];
         }
         const pairList = token0
-            ? plainToClass(PairListOnePayload, response.data, {
-                  excludeExtraneousValues: true,
-              })
-            : plainToClass(PairListTwoPayload, response.data, {
-                  excludeExtraneousValues: true,
-              });
+            ? plainToClass(PairListOnePayload, response.data, { excludeExtraneousValues: true })
+            : plainToClass(PairListTwoPayload, response.data, { excludeExtraneousValues: true });
         this.classValidatorService.validatePairsFetchData(pairList);
         return this.getTokenList(pairList);
     }
 
     public async insertNewTokens(): Promise<number> {
         const latestToken = await this.tokenRepository.findLatestToken();
-        const tokenZeroData = this.getQueryData(
-            true,
-            0,
-            50,
-            QueryOrderEnum.DESC,
-        );
-        const tokenOneData = this.getQueryData(
-            false,
-            0,
-            50,
-            QueryOrderEnum.DESC,
-        );
+        const tokenZeroData = this.getQueryData(true,0,50, QueryOrderEnum.DESC);
+        const tokenOneData = this.getQueryData(false,0,50,QueryOrderEnum.DESC);
 
         const newTokens = (await this.fetchTokens(this.API_URL, tokenZeroData, true))
             .concat(await this.fetchTokens(this.API_URL, tokenOneData, false));
