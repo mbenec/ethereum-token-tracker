@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Token } from './entities/token.entity';
 import { plainToClass } from 'class-transformer';
-import { PairListTwoPayload } from './types/pair-two.payload';
+import { PairListTwoPayload } from './types/payload/pair-two.payload';
 import { AxiosService } from '../axios/axios.service';
 import { ClassValidatorService } from '../validators/class-validator.service';
 import { TokenRepository } from './token.repository';
-import { PairListOnePayload } from './types/pair-one.payload';
+import { PairListOnePayload } from './types/payload/pair-one.payload';
 import { QueryOrderEnum } from './enums/query-order.enum';
 
 @Injectable()
@@ -47,6 +47,7 @@ export class TokenService {
         const pairList = token0
             ? plainToClass(PairListOnePayload, response.data, { excludeExtraneousValues: true })
             : plainToClass(PairListTwoPayload, response.data, { excludeExtraneousValues: true });
+
         this.classValidatorService.validatePairsFetchData(pairList);
         return this.getTokenList(pairList);
     }

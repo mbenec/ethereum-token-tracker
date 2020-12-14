@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { PairListOnePayload } from '../token/types/pair-one.payload';
-import { PairListTwoPayload } from '../token/types/pair-two.payload';
-import { TokenPayload } from '../token/types/token.payload';
+import { PairListOnePayload } from '../token/types/payload/pair-one.payload';
+import { PairListTwoPayload } from '../token/types/payload/pair-two.payload';
+import { TokenPayload } from '../token/types/payload/token.payload';
 
 @Injectable()
 export class ClassValidatorService {
