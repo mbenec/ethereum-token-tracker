@@ -20,10 +20,6 @@ export class TokenService {
         private readonly tokenRepository: TokenRepository,
     ) {}
 
-    public async getLastToken(): Promise<Token> {
-        return this.tokenRepository.findLatestToken();
-    }
-
     public async getTokenById(id: string): Promise<Token> {
         return this.tokenRepository.findById(id);
     }
@@ -105,7 +101,7 @@ export class TokenService {
         return count;
     }
 
-    private getQueryData(
+    public getQueryData(
         token0 = true,
         skip = 0,
         limit = 1000,

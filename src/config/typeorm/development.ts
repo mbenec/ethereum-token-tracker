@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 
 @Injectable()
-export class TypeOrmSeedDevConfig implements TypeOrmOptionsFactory {
+export class TypeOrmDevConfig implements TypeOrmOptionsFactory {
     createTypeOrmOptions(): TypeOrmModuleOptions {
         return {
             type: 'postgres',
@@ -10,9 +10,10 @@ export class TypeOrmSeedDevConfig implements TypeOrmOptionsFactory {
             password: 'ethereum',
             database: 'ethereum_dev',
             host: 'localhost',
+            autoLoadEntities: true,
+            keepConnectionAlive: true,
             port: 5432,
             entities: [__dirname + '/../../**/*.entity{.ts,.js}'],
-            dropSchema: true,
             synchronize: true,
             logging: false,
         };

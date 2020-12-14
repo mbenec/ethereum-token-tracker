@@ -10,11 +10,6 @@ import { Token } from './entities/token.entity';
 export class TokenController {
     constructor(private readonly tokenService: TokenService) {}
 
-    @Get()
-    findAll(): Promise<number> {
-        return this.tokenService.insertNewTokens();
-    }
-
     @Get('/id/:id')
     findById(@Param('id') id: string): Promise<Token> {
         return this.tokenService.getTokenById(id);
