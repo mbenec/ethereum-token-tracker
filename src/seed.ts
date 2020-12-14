@@ -14,7 +14,13 @@ import { TokenService } from './api/token/token.service';
             useClass: TypeOrmSeedDevConfig,
         }),
     ],
-    providers: [AxiosService, TokenRepository, Logger, ClassValidatorService, TokenService],
+    providers: [
+        AxiosService,
+        TokenRepository,
+        Logger,
+        ClassValidatorService,
+        TokenService,
+    ],
 })
 class SeedModule {}
 
@@ -27,7 +33,7 @@ async function bootstrap() {
 
     const count = await tokenService.insertAllTokens();
     // eslint-disable-next-line no-console
-    console.log("Inserted total of " + count + " tokens.");
+    console.log('Inserted total of ' + count + ' tokens.');
     // eslint-disable-next-line no-console
     console.log('Database seeded.');
 }

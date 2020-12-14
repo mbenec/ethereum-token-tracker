@@ -15,4 +15,3 @@ export class PairListTwoPayload {
     @Type(() => PairTwoPayload)
     pairs!: PairTwoPayload[];
 }
-

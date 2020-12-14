@@ -10,15 +10,15 @@ import { QueryOrderEnum } from './enums/query-order.enum';
 
 @Injectable()
 export class TokenService {
-    private readonly API_URL = 'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2';
+    private readonly API_URL =
+        'https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v2';
 
     constructor(
         private readonly logger: Logger,
         private readonly axiosService: AxiosService,
         private readonly classValidatorService: ClassValidatorService,
         private readonly tokenRepository: TokenRepository,
-    ) {
-    }
+    ) {}
 
     public async getLastToken(): Promise<Token> {
         return this.tokenRepository.findLatestToken();
@@ -36,24 +36,44 @@ export class TokenService {
         return this.tokenRepository.findBySymbol(symbol);
     }
 
-    public async fetchTokens(url: string, data: string, token0: boolean): Promise<Token[]> {
+    public async fetchTokens(
+        url: string,
+        data: string,
+        token0: boolean,
+    ): Promise<Token[]> {
         const response = await this.axiosService.axiosPost(url, data);
         if (response && response.data && response.data.pairs.length === 0) {
             return [];
         }
-        const pairList = token0 ? plainToClass(PairListOnePayload, response.data, { excludeExtraneousValues: true })
-            : plainToClass(PairListTwoPayload, response.data, { excludeExtraneousValues: true });
+        const pairList = token0
+            ? plainToClass(PairListOnePayload, response.data, {
+                  excludeExtraneousValues: true,
+              })
+            : plainToClass(PairListTwoPayload, response.data, {
+                  excludeExtraneousValues: true,
+              });
         this.classValidatorService.validatePairsFetchData(pairList);
         return this.getTokenList(pairList);
     }
 
     public async insertNewTokens(): Promise<number> {
         const latestToken = await this.tokenRepository.findLatestToken();
-        const tokenZeroData = this.getQueryData(true, 0, 50, QueryOrderEnum.DESC);
-        const tokenOneData = this.getQueryData(false, 0, 50, QueryOrderEnum.DESC);
+        const tokenZeroData = this.getQueryData(
+            true,
+            0,
+            50,
+            QueryOrderEnum.DESC,
+        );
+        const tokenOneData = this.getQueryData(
+            false,
+            0,
+            50,
+            QueryOrderEnum.DESC,
+        );
 
         const newTokens = (await this.fetchTokens(this.API_URL, tokenZeroData, true))
             .concat(await this.fetchTokens(this.API_URL, tokenOneData, false));
+
         const filteredTokens = newTokens.filter(token => new Date(token.timestamp) > latestToken.timestamp);
         if(filteredTokens.length > 0){
             await this.tokenRepository.insertTokens(filteredTokens);
@@ -85,22 +105,34 @@ export class TokenService {
         return count;
     }
 
-    private getQueryData(token0 = true, skip = 0, limit = 1000, orderDirection: QueryOrderEnum = QueryOrderEnum.ASC): string {
-        return token0 ? `{"query":"{ pairs(first:${limit}, skip:${skip}, where:{ token0:\\"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\\"  }, orderBy:createdAtTimestamp, orderDirection:${orderDirection}){ token1{ id name symbol } createdAtTimestamp }}","variables":null}`
+    private getQueryData(
+        token0 = true,
+        skip = 0,
+        limit = 1000,
+        orderDirection: QueryOrderEnum = QueryOrderEnum.ASC,
+    ): string {
+        return token0
+            ? `{"query":"{ pairs(first:${limit}, skip:${skip}, where:{ token0:\\"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\\"  }, orderBy:createdAtTimestamp, orderDirection:${orderDirection}){ token1{ id name symbol } createdAtTimestamp }}","variables":null}`
             : `{"query":"{ pairs(first:${limit}, skip:${skip}, where:{ token1:\\"0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2\\"  }, orderBy:createdAtTimestamp, orderDirection:${orderDirection}){ token0{ id name symbol } createdAtTimestamp }}","variables":null}`;
     }
 
-    private getTokenList(data: PairListOnePayload | PairListTwoPayload): Token[] {
+    private getTokenList(
+        data: PairListOnePayload | PairListTwoPayload,
+    ): Token[] {
         if (data instanceof PairListOnePayload) {
-            return data.pairs.map(pair => this.tokenRepository.createToken({
-                ...pair.token1,
-                timestamp: parseInt(pair.createdAtTimestamp),
-            }));
+            return data.pairs.map((pair) =>
+                this.tokenRepository.createToken({
+                    ...pair.token1,
+                    timestamp: parseInt(pair.createdAtTimestamp),
+                }),
+            );
         } else {
-            return data.pairs.map(pair => this.tokenRepository.createToken({
-                ...pair.token0,
-                timestamp: parseInt(pair.createdAtTimestamp),
-            }));
+            return data.pairs.map((pair) =>
+                this.tokenRepository.createToken({
+                    ...pair.token0,
+                    timestamp: parseInt(pair.createdAtTimestamp),
+                }),
+            );
         }
     }
 }

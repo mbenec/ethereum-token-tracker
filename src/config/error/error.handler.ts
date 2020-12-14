@@ -13,12 +13,15 @@ export class AllExceptionsFilter implements ExceptionFilter {
         const ctx = host.switchToHttp();
         const response = ctx.getResponse();
         const request = ctx.getRequest();
-        const status = exception instanceof HttpException
-            ? exception.getStatus()
-            : HttpStatus.BAD_REQUEST;
-        const message = exception instanceof Error && !(exception instanceof InternalServerErrorException)
-            ? exception.message
-            : 'Something went wrong.';
+        const status =
+            exception instanceof HttpException
+                ? exception.getStatus()
+                : HttpStatus.BAD_REQUEST;
+        const message =
+            exception instanceof Error &&
+            !(exception instanceof InternalServerErrorException)
+                ? exception.message
+                : 'Something went wrong.';
 
         response.status(status).json({
             statusCode: status,

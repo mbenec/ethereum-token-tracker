@@ -13,9 +13,8 @@ export class ScheduleService {
         rule.second = [0];
         scheduleJob(rule, async () => {
             // eslint-disable-next-line no-console
-            console.log("Fetching new tokens.");
+            console.log('Fetching new tokens.');
             await this.tokenService.insertNewTokens();
         });
     }
-
 }

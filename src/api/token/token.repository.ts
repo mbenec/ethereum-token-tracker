@@ -24,8 +24,8 @@ export class TokenRepository extends Repository<Token> {
     public async findLatestToken(): Promise<Token> {
         return this.entityManager
             .createQueryBuilder()
-            .select("token")
-            .from(Token, "token")
+            .select('token')
+            .from(Token, 'token')
             .limit(1)
             .orderBy('token.timestamp', 'DESC')
             .getOneOrFail();
@@ -37,15 +37,14 @@ export class TokenRepository extends Repository<Token> {
     }
 
     public async findById(id: string): Promise<Token> {
-            return this.entityManager.findOneOrFail(Token, id);
+        return this.entityManager.findOneOrFail(Token, id);
     }
 
     public async findByName(name: string): Promise<Token[]> {
-        return this.entityManager.find(Token, { where: { name }});
-
+        return this.entityManager.find(Token, { where: { name } });
     }
 
     public async findBySymbol(symbol: string): Promise<Token[]> {
-        return this.entityManager.find(Token, { where: { symbol }});
+        return this.entityManager.find(Token, { where: { symbol } });
     }
 }

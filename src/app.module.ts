@@ -9,7 +9,14 @@ import { TokenController } from './api/token/token.controller';
 
 @Module({
     imports: [TypeOrmModule.forRoot()],
-    providers: [AxiosService, TokenService, ClassValidatorService, TokenRepository, Logger, ScheduleService],
+    providers: [
+        AxiosService,
+        TokenService,
+        ClassValidatorService,
+        TokenRepository,
+        Logger,
+        ScheduleService,
+    ],
     controllers: [TokenController],
 })
 export class AppModule {}
