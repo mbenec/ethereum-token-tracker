@@ -1,6 +1,6 @@
 import { EntityManager, EntityRepository, Repository } from 'typeorm';
 import { Token } from './entities/token.entity';
-import { Logger, NotFoundException } from '@nestjs/common';
+import { Logger } from '@nestjs/common';
 import { TokenType } from './types/token.type';
 
 @EntityRepository(Token)
@@ -37,19 +37,12 @@ export class TokenRepository extends Repository<Token> {
     }
 
     public async findById(id: string): Promise<Token> {
-        try {
             return this.entityManager.findOneOrFail(Token, id);
-        } catch (e){
-            throw new NotFoundException("Token with id " + id + " was not found.");
-        }
     }
 
     public async findByName(name: string): Promise<Token[]> {
-        try {
-            return this.entityManager.find(Token, { where: { name }});
-        } catch (e){
-            throw new NotFoundException("Token with name " + name + " was not found.");
-        }
+        return this.entityManager.find(Token, { where: { name }});
+
     }
 
     public async findBySymbol(symbol: string): Promise<Token[]> {

@@ -2,13 +2,11 @@ import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { EntityManager } from 'typeorm';
 
 import axios from 'axios';
-import { TokenRepository } from '../token/token.repository';
 
 @Injectable()
 export class AxiosService {
     constructor(
         private readonly entityManager: EntityManager,
-        private readonly tokenRepository: TokenRepository,
         private readonly logger: Logger,
     ) {
     }

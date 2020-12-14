@@ -1,12 +1,12 @@
-import { AxiosService } from './axios/axios.service';
+import { AxiosService } from './api/axios/axios.service';
 import { Connection } from 'typeorm';
 import { NestFactory } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { TypeOrmSeedDevConfig } from '../config/seed-dev';
+import { TypeOrmSeedDevConfig } from './config/typeorm/seed-dev';
 import { Logger, Module } from '@nestjs/common';
-import { TokenRepository } from './token/token.repository';
-import { ClassValidatorService } from './validators/class-validator.service';
-import { TokenService } from './token/token.service';
+import { TokenRepository } from './api/token/token.repository';
+import { ClassValidatorService } from './api/validators/class-validator.service';
+import { TokenService } from './api/token/token.service';
 
 @Module({
     imports: [
